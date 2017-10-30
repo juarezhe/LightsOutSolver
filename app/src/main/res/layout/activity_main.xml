@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.example.android.lightsoutsolver.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Columns:" />
+
+        <EditText
+            android:id="@+id/number_of_columns"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rows:" />
+
+        <EditText
+            android:id="@+id/number_of_rows"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/submit_dimensions_button"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Dimensions" />
+
+    <Button
+        android:id="@+id/generate_button"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate" />
+
+    <TextView
+        android:id="@+id/matrix_output"
+        android:layout_width="match_parent"
+        tools:text="0101011101100"
+        android:gravity="center"
+        android:layout_height="match_parent" />
+
+    <!--
+    <TableLayout
+        android:id="@+id/table_layout"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableRow android:gravity="center">
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+        </TableRow>
+        <TableRow android:gravity="center">
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+            <TextView
+                android:padding="8dp"
+                tools:text="On" />
+        </TableRow>
+    </TableLayout>
+    -->
+<!--
+    <GridLayout
+        android:id="@+id/grid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </GridLayout>
+-->
+
+</LinearLayout>
