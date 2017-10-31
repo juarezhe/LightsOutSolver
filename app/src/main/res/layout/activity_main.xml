@@ -22,23 +22,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Columns:" />
+                android:text="@string/columns" />
 
             <EditText
                 android:id="@+id/number_of_columns"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:inputType="number" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rows:" />
+                android:text="@string/rows" />
 
             <EditText
                 android:id="@+id/number_of_rows"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:inputType="number" />
         </LinearLayout>
 
@@ -49,7 +51,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Submit Dimensions" />
+            android:text="@string/submit_dimensions_button" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,13 +72,13 @@
                 android:id="@+id/generate_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Generate" />
+                android:text="@string/generate_button" />
 
             <Button
                 android:id="@+id/reset_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reset" />
+                android:text="@string/reset_button" />
         </LinearLayout>
 
     </LinearLayout>
@@ -87,54 +89,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         tools:text="0101011101100" />
-
-    <!--
-    <TableLayout
-        android:id="@+id/table_layout"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TableRow android:gravity="center">
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-        </TableRow>
-        <TableRow android:gravity="center">
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-        </TableRow>
-        <TableRow android:gravity="center">
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-            <TextView
-                android:padding="8dp"
-                tools:text="On" />
-        </TableRow>
-    </TableLayout>
-    -->
-    <!--
-        <GridLayout
-            android:id="@+id/grid_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </GridLayout>
-    -->
 
 </LinearLayout>

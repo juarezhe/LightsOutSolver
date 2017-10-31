@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Lights Out Solver</string>
+    <string name="generate_button">Generate</string>
+    <string name="reset_button">Reset</string>
+    <string name="submit_dimensions_button">Submit Dimensions</string>
+    <string name="columns">Columns:</string>
+    <string name="rows">Rows:</string>
 </resources>
