@@ -38,26 +38,42 @@
 
     <Button
         android:id="@+id/submit_dimensions_button"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="Submit Dimensions" />
 
-    <Button
-        android:id="@+id/generate_button"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/generate_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Generate" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/generate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate" />
+
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/matrix_output"
         android:layout_width="match_parent"
-        tools:text="0101011101100"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_height="match_parent" />
+        tools:text="0101011101100" />
 
     <!--
     <TableLayout
@@ -100,12 +116,12 @@
         </TableRow>
     </TableLayout>
     -->
-<!--
-    <GridLayout
-        android:id="@+id/grid_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </GridLayout>
--->
+    <!--
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </GridLayout>
+    -->
 
 </LinearLayout>

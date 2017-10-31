@@ -22,14 +22,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Find the button that generates a lights out grid
-        Button generateButton = (Button) findViewById(R.id.generate_button);
+        final Button submitDimensionsButton = (Button) findViewById(R.id.submit_dimensions_button);
 
         // Set a click listener on that View
-        generateButton.setOnClickListener(new View.OnClickListener() {
+        submitDimensionsButton.setOnClickListener(new View.OnClickListener() {
 
             // The code in this method will be executed when the Generate Button is clicked
             @Override
             public void onClick(View view) {
+
+
+                View generateView = findViewById(R.id.generate_view);
+
+                //Remove Submit Dimensions button
+                submitDimensionsButton.setVisibility(View.GONE);
+
+                //Replace with Generate and Reset buttons
+                generateView.setVisibility(View.VISIBLE);
 
                 EditText numberOfColumns = (EditText) findViewById(R.id.number_of_columns);
                 columns = Integer.parseInt(numberOfColumns.getText().toString());
