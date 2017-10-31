@@ -9,64 +9,77 @@
     tools:context="com.example.android.lightsoutsolver.MainActivity">
 
     <LinearLayout
+        android:id="@+id/submit_dimensions_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Columns:" />
+
+            <EditText
+                android:id="@+id/number_of_columns"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rows:" />
+
+            <EditText
+                android:id="@+id/number_of_rows"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/submit_dimensions_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Columns:" />
-
-        <EditText
-            android:id="@+id/number_of_columns"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rows:" />
-
-        <EditText
-            android:id="@+id/number_of_rows"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Submit Dimensions" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/submit_dimensions_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Submit Dimensions" />
 
     <LinearLayout
-        android:id="@+id/generate_view"
+        android:id="@+id/set_initial_state_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <Button
-            android:id="@+id/generate_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generate" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/reset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset" />
+            <Button
+                android:id="@+id/generate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Generate" />
+
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset" />
+        </LinearLayout>
+
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/matrix_output"

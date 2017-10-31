@@ -31,15 +31,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
-                View generateView = findViewById(R.id.generate_view);
-
-                //Remove Submit Dimensions button
-                submitDimensionsButton.setVisibility(View.GONE);
-
-                //Replace with Generate and Reset buttons
-                generateView.setVisibility(View.VISIBLE);
-
                 EditText numberOfColumns = (EditText) findViewById(R.id.number_of_columns);
                 columns = Integer.parseInt(numberOfColumns.getText().toString());
 
@@ -48,100 +39,104 @@ public class MainActivity extends AppCompatActivity {
 
                 area = columns * rows;
 
-                Log.v("MainActivity.java", "Columns: " + columns);
-                Log.v("MainActivity.java", "Rows: " + rows);
-                Log.v("MainActivity.java", "Area: " + area);
+                // Find the Set Initial State View
+                View setInitialStateView = findViewById(R.id.set_initial_state_view);
 
-                matrixA = new int[area][area];
+                // Find Submit Dimensions View
+                View submitDimensionsView = findViewById(R.id.submit_dimensions_view);
 
-                for (int m = 0; m < area; m++) {
-                    for (int n = 0; n < area; n++) {
-                        if (m == n) {
-                            matrixA[m][n] = 1;
+                // Remove Submit Dimension View
+                submitDimensionsView.setVisibility(View.GONE);
 
-                            if (n - 1 >= 0)
-                                matrixA[m][n - 1] = 1;
-                            else
-                                Log.v("MainActivity.java", "N - 1 error. m= " + m + ", n= " + n + ", area= "  + area);
+                // Replace with Generate View
+                setInitialStateView.setVisibility(View.VISIBLE);
 
-                            if (n + 1 < area)
-                                matrixA[m][n + 1] = 1;
-                            else
-                                Log.v("MainActivity.java", "N + 1 error. m= " + m + ", n= " + n + ", area= "  + area);
+                /**
+                 Log.v("MainActivity.java", "Columns: " + columns);
+                 Log.v("MainActivity.java", "Rows: " + rows);
+                 Log.v("MainActivity.java", "Area: " + area);
 
-                            if (n - columns >= 0)
-                                matrixA[m][n - columns] = 1;
-                            else
-                                Log.v("MainActivity.java", "N - c error. m= " + m + ", n= " + n + ", area= "  + area);
+                 matrixA = new int[area][area];
 
-                            if (n + columns < area)
-                                matrixA[m][n + columns] = 1;
-                            else
-                                Log.v("MainActivity.java", "N + c error. m= " + m + ", n= " + n + ", area= "  + area);
-                        }
-                        else if (matrixA[m][n] != 1)
-                            matrixA[m][n] = 0;
-                    }
-                }
+                 for (int m = 0; m < area; m++) {
+                 for (int n = 0; n < area; n++) {
+                 if (m == n) {
+                 matrixA[m][n] = 1;
 
-                String matrixToDisplay = null;
+                 if (n - 1 >= 0)
+                 matrixA[m][n - 1] = 1;
+                 else
+                 Log.v("MainActivity.java", "N - 1 error. m= " + m + ", n= " + n + ", area= " + area);
 
-                for (int i = 0; i < area; i++) {
-                    for (int j = 0; j < area; j++) {
-                        if (j == 0)
-                            matrixToDisplay = matrixA[i][j] + " ";
-                        else if (j == area - 1)
-                            matrixToDisplay += matrixA[i][j];
-                        else
-                            matrixToDisplay += matrixA[i][j] + " ";
-                    }
-                    Log.v("MainActivity.java", matrixToDisplay);
-                    matrixToDisplay = null;
-                }
+                 if (n + 1 < area)
+                 matrixA[m][n + 1] = 1;
+                 else
+                 Log.v("MainActivity.java", "N + 1 error. m= " + m + ", n= " + n + ", area= " + area);
+
+                 if (n - columns >= 0)
+                 matrixA[m][n - columns] = 1;
+                 else
+                 Log.v("MainActivity.java", "N - c error. m= " + m + ", n= " + n + ", area= " + area);
+
+                 if (n + columns < area)
+                 matrixA[m][n + columns] = 1;
+                 else
+                 Log.v("MainActivity.java", "N + c error. m= " + m + ", n= " + n + ", area= " + area);
+                 } else if (matrixA[m][n] != 1)
+                 matrixA[m][n] = 0;
+                 }
+                 }
+
+                 String matrixToDisplay = null;
+
+                 for (int i = 0; i < area; i++) {
+                 for (int j = 0; j < area; j++) {
+                 if (j == 0)
+                 matrixToDisplay = matrixA[i][j] + " ";
+                 else if (j == area - 1)
+                 matrixToDisplay += matrixA[i][j];
+                 else
+                 matrixToDisplay += matrixA[i][j] + " ";
+                 }
+                 Log.v("MainActivity.java", matrixToDisplay);
+                 matrixToDisplay = null;
+                 }
+                 **/
             }
         });
 
-        //matrixOutput.setText(matrixA.toString());
+        // Find the button that generates a lights out grid
+        final Button generateButton = (Button) findViewById(R.id.generate_button);
 
-        /**
-         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout);
-         gridLayout.setColumnCount(columns);
-         gridLayout.setRowCount(rows);
+        // Set a click listener on that View
+        generateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Generate button should create matrixA from dimensions,
+                // calculate
+            }
+        });
 
-         int count = gridLayout.getChildCount();
+        // Find the button that generates a lights out grid
+        final Button resetButton = (Button) findViewById(R.id.reset_button);
 
-         Log.v("MainActivity.java", "Child count: " + count);
+        // Set a click listener on that View
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-         GridLayout gridLayout = new GridLayout(this);
+                // Find the Set Initial State View
+                View setInitialStateView = findViewById(R.id.set_initial_state_view);
 
-         //define how many rows and columns to be used in the layout
-         gridLayout.setColumnCount(columns);
-         gridLayout.setRowCount(rows);
+                // Find Submit Dimensions View
+                View submitDimensionsView = findViewById(R.id.submit_dimensions_view);
 
+                // Replace with Generate View
+                setInitialStateView.setVisibility(View.GONE);
 
-         for (int i = 0; i < rows; i++) {
-         for (int j = 0; j < columns; j++) {
-         editTexts[i][j] = new EditText(this);
-         setPos(editTexts[i][j], i, j);
-         gridLayout.addView(editTexts[i][j]);
-         }
-         }
-         setContentView(gridLayout);
-         **/
+                // Remove Submit Dimension View
+                submitDimensionsView.setVisibility(View.VISIBLE);
+            }
+        });
     }
-    /**
-     private void update() {
-     TableLayout table = (TableLayout) findViewById(R.id.table_layout);
-
-     TableRow tr = new TableRow(this);
-     tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-
-     TextView tv = new TextView(this);
-     tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-     tv.setText("Off");
-     tr.addView(tv);
-
-     table.addView(tr);
-     }
-     **/
 }
