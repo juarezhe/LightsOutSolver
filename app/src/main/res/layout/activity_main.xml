@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,8 +27,8 @@
                 android:id="@+id/number_of_columns"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textAlignment="center" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,8 +39,8 @@
                 android:id="@+id/number_of_rows"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <Button
@@ -60,6 +59,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/initial_state_entry_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"></LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
