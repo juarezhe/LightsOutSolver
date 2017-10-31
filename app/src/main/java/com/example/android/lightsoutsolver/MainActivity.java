@@ -4,21 +4,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class MainActivity extends AppCompatActivity {
 
+    static String TAG = "MainActivity.java";
     int columns;
     int rows;
     int area;
     int[][] matrixA;
+    int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,41 +58,28 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < area; i++) {
                     EditText myEditText = new EditText(initialStateEntryFields.getContext()); //Context
-                    myEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    // myEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                     // myEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     initialStateEntryFields.addView(new EditText(initialStateEntryFields.getContext()));
                 }
-
-                /**
-                 private void addEditTextDynamically(LinearLayout mParentLayout,String [] myList){
-
-                 for (int i=0;i<myList.length;i++){
-                 EditText myEditText = new EditText(mParentLayout.getContext()); //Context
-                 myEditText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-                 myEditText.setId(i);
-                 myEditText.setTag(myList[i]);
-                 mParentLayout.addView(myEditText);
-                 }
-                 }
-                 **/
             }
         });
 
         // Find the button that generates a lights out grid
-        final Button generateButton = (Button) findViewById(R.id.generate_button);
+        final Button generateButton = findViewById(R.id.generate_button);
 
         // Set a click listener on that View
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Generate button should create matrixA from dimensions,
-                // calculate
+                // Should calculate inverse
 
-                Log.v("MainActivity.java", "Columns: " + columns);
-                Log.v("MainActivity.java", "Rows: " + rows);
-                Log.v("MainActivity.java", "Area: " + area);
+                Log.v(TAG, "Columns: " + columns);
+                Log.v(TAG, "Rows: " + rows);
+                Log.v(TAG, "Area: " + area);
 
                 matrixA = new int[area][area];
+                // matrixB = new int[area];
 
                 for (int m = 0; m < area; m++) {
                     for (int n = 0; n < area; n++) {
@@ -102,23 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
                             if (n - 1 >= 0)
                                 matrixA[m][n - 1] = 1;
-                            else
-                                Log.v("MainActivity.java", "N - 1 error. m= " + m + ", n= " + n + ", area= " + area);
-
                             if (n + 1 < area)
                                 matrixA[m][n + 1] = 1;
-                            else
-                                Log.v("MainActivity.java", "N + 1 error. m= " + m + ", n= " + n + ", area= " + area);
-
                             if (n - columns >= 0)
                                 matrixA[m][n - columns] = 1;
-                            else
-                                Log.v("MainActivity.java", "N - c error. m= " + m + ", n= " + n + ", area= " + area);
-
                             if (n + columns < area)
                                 matrixA[m][n + columns] = 1;
-                            else
-                                Log.v("MainActivity.java", "N + c error. m= " + m + ", n= " + n + ", area= " + area);
                         } else if (matrixA[m][n] != 1)
                             matrixA[m][n] = 0;
                     }
@@ -130,21 +105,24 @@ public class MainActivity extends AppCompatActivity {
                     for (int j = 0; j < area; j++) {
                         if (i == 0 && j == 0)
                             matrixToDisplay = matrixA[i][j] + " ";
-                        else if (j == area - 1)
+                        else if (j == area - 1) {
                             matrixToDisplay += matrixA[i][j];
+                        }
                         else
                             matrixToDisplay += matrixA[i][j] + " ";
                     }
-                    matrixToDisplay += "\n";
+                    matrixToDisplay += " | " + matrixB[i] + "\n";
                 }
 
-                TextView matrixOutput = (TextView) findViewById(R.id.matrix_output);
+                TextView matrixOutput = findViewById(R.id.matrix_output);
                 matrixOutput.setText(matrixToDisplay);
+
+                calculateInverse(matrixA, matrixB, area);
             }
         });
 
         // Find the button that generates a lights out grid
-        final Button resetButton = (Button) findViewById(R.id.reset_button);
+        final Button resetButton = findViewById(R.id.reset_button);
 
         // Set a click listener on that View
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -163,15 +141,42 @@ public class MainActivity extends AppCompatActivity {
                 // Remove Submit Dimension View
                 submitDimensionsView.setVisibility(View.VISIBLE);
 
-                EditText numberOfColumns = (EditText) findViewById(R.id.number_of_columns);
+                EditText numberOfColumns = findViewById(R.id.number_of_columns);
                 numberOfColumns.setText(null);
 
-                EditText numberOfRows = (EditText) findViewById(R.id.number_of_rows);
+                EditText numberOfRows = findViewById(R.id.number_of_rows);
                 numberOfRows.setText(null);
 
-                TextView matrixOutput = (TextView) findViewById(R.id.matrix_output);
+                TextView matrixOutput = findViewById(R.id.matrix_output);
                 matrixOutput.setText(null);
             }
         });
+    }
+
+    public void calculateInverse(int[][] matrixA, int[] matrixB, int size) {
+        // Consider first dimension of matrixA[][] and matrixB[] to be rows
+        // such that matrixB is a single vertical column
+
+        // Check the first column of matrixA (matrixA[i][0]) for values of 1
+        // For each row with a 1 in its first column, "add" the topmost row to the others,
+        // then swap to get the row and column to be a 1
+
+        int[][] tempA;
+        int[][] tempB;
+
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < size; j++) {
+                if (matrixA[i][j] == 1)
+                    Log.v(TAG, String.valueOf(i) + String.valueOf(j));
+            }
+        }
+
+    }
+
+    public int binaryAdd(int valueA, int valueB) {
+        if ((valueA == 1 && valueB == 1) || (valueA == 0 && valueB == 0))
+            return 0;
+        else
+            return 1;
     }
 }
