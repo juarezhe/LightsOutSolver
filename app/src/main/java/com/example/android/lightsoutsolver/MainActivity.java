@@ -12,9 +12,9 @@ public class MainActivity extends AppCompatActivity {
     static String TAG = "MainActivity.java";
     int columns;
     int rows;
-    int area;
+    int xLength;
+    int yHeight;
     int[][] matrixA;
-    int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 EditText numberOfRows = findViewById(R.id.number_of_rows);
                 rows = Integer.parseInt(numberOfRows.getText().toString());
 
-                area = columns * rows;
+                xLength = columns * rows + 1;
+                yHeight = columns * rows;
 
                 // Find the Set Initial State View
                 View setInitialStateView = findViewById(R.id.set_initial_state_view);
@@ -53,18 +54,13 @@ public class MainActivity extends AppCompatActivity {
 
                 matrixA = generateMatrixA();
 
+                int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
+
+                for (int n = 0; n < yHeight; n++) {
+                    matrixA[xLength - 1][n] = matrixB[n];
+                }
+
                 displayMatrices();
-
-                /**
-                 LinearLayout initialStateEntryFields = findViewById(R.id.initial_state_entry_fields);
-
-                 for (int i = 0; i < area; i++) {
-                 EditText myEditText = new EditText(initialStateEntryFields.getContext()); //Context
-                 // myEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                 // myEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                 initialStateEntryFields.addView(new EditText(initialStateEntryFields.getContext()));
-                 }
-                 **/
             }
         });
 
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                calculateInverse();
+                inversionFirstPass();
 
             }
         });
@@ -114,66 +110,73 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int[][] generateMatrixA() {
-        int[][] mMatrixA = new int[area][area];
+        int[][] mMatrixA = new int[xLength][yHeight];
 
-        for (int i = 0; i < area; i++) {
-            for (int j = 0; j < area; j++) {
-                if (i == j) {
-                    mMatrixA[i][j] = 1;
+        for (int x = 0; x < xLength; x++) {
+            for (int y = 0; y < yHeight; y++) {
+                if (x == y) {
+                    mMatrixA[x][y] = 1;
 
-                    if (j - 1 >= 0)
-                        mMatrixA[i][j - 1] = 1;
-                    if (j + 1 < area)
-                        mMatrixA[i][j + 1] = 1;
-                    if (j - columns >= 0)
-                        mMatrixA[i][j - columns] = 1;
-                    if (j + columns < area)
-                        mMatrixA[i][j + columns] = 1;
-                } else if (mMatrixA[i][j] != 1)
-                    mMatrixA[i][j] = 0;
+                    if (y - 1 >= 0)
+                        mMatrixA[x][y - 1] = 1;
+                    if (y + 1 < yHeight)
+                        mMatrixA[x][y + 1] = 1;
+                    if (y - columns >= 0)
+                        mMatrixA[x][y - columns] = 1;
+                    if (y + columns < yHeight)
+                        mMatrixA[x][y + columns] = 1;
+                } else if (mMatrixA[x][y] != 1)
+                    mMatrixA[x][y] = 0;
             }
         }
         return mMatrixA;
     }
 
-    public void calculateInverse() {
-        // Consider first dimension of matrixA[][] and matrixB[] to be rows
-        // such that matrixB is a single vertical column
-
-        // Check the first column of matrixA (matrixA[i][0]) for values of 1
-        // For each row with a 1 in its first column, "add" the topmost row to the others,
-        // then swap to get the row and column to be a 1
-
-        int[] tempA = new int[area];
+    public void inversionFirstPass() {
+        int[] tempA = new int[xLength];
         int tempB = 0;
 
-        for (int i = 0; i < area; i++) {
-            for (int j = 0; j < area; j++) {
-                if (i == j && matrixA[i][j] == 1) { // At i == j, the value should be 1, all other values should be 0
-                    for (int n = 0; n < area; n++)
-                        tempA[n] = matrixA[n][j];
-                    tempB = matrixB[j];
-                } else if (i == j && matrixA[i][j] == 0) {
-                    for (int n = 0; n < area; n++) {
-                        tempA[n] = matrixA[n][j];
-                        matrixA[n][j] = matrixA[n][j + 1];
-                        matrixA[n][j + 1] = tempA[n];
-                        tempA[n] = matrixA[n][j];
+        for (int x = 0; x < xLength; x++) {
+            for (int y = x; y < yHeight; y++) {
+                if (x == y) {
+                    if (matrixA[x][y] == 0) {
+                        for (int j = y; j < yHeight; j++) {
+                            if (matrixA[x][j] == 1) {
+                                for (int n = 0; n < xLength; n++) {
+                                    tempA[n] = matrixA[n][j];
+                                    matrixA[n][j] = matrixA[n][y];
+                                    matrixA[n][y] = tempA[n];
+                                }
+                            }
+                        }
+                    } else if (matrixA[x][y] == 1) {
+                        for (int n = 0; n < xLength; n++)
+                            tempA[n] = matrixA[n][y];
                     }
-                    tempB = matrixB[j];
-                    matrixB[j] = matrixB[j + 1];
-                    matrixB[j + 1] = tempB;
-                    tempB = matrixB[j];
-                } else if (i - 1 >= 0) {
-                    if (matrixA[i][j] == 1 && matrixA[i - 1][j] != 1) {
-                        for (int n = 0; n < area; n++)
-                            matrixA[n][j] = binaryAdd(tempA[n], matrixA[n][j]);
-                        matrixB[j] = binaryAdd(tempB, matrixB[j]);
-                    }
-                } else if (matrixA[i][j] == 1) {
-                    for (int n = 0; n < area; n++)
-                        matrixA[n][j] = binaryAdd(tempA[n], matrixA[n][j]);
-                    matrixB[j] = binaryAdd(tempB, matrixB[j]);
+                } else if (matrixA[x][y] == 1) {
+                    for (int n = 0; n < xLength; n++)
+                        matrixA[n][y] = binaryAdd(tempA[n], matrixA[n][y]);
+                }
+            }
+        }
+
+        //displayMatrices();
+        inversionSecondPass();
+    }
+
+    public void inversionSecondPass() {
+
+        int[] tempA = new int[xLength];
+        int tempB = 0;
+
+        for (int x = xLength - 2; x > 0; x--) {
+            for (int y = x; y >= 0; y--) {
+                if (x == y) {
+                    for (int n = 0; n < xLength; n++)
+                        tempA[n] = matrixA[n][y];
+                } else if (matrixA[x][y] == 1) {
+                    for (int n = 0; n < xLength; n++)
+                        matrixA[n][y] = binaryAdd(tempA[n], matrixA[n][y]);
                 }
             }
         }
@@ -191,16 +194,15 @@ public class MainActivity extends AppCompatActivity {
     public void displayMatrices() {
         String matrixToDisplay = null;
 
-        for (int j = 0; j < area; j++) {
-            for (int i = 0; i < area; i++) {
-                if (j == 0 && i == 0)
-                    matrixToDisplay = matrixA[i][j] + " ";
-                else if (i == area - 1) {
-                    matrixToDisplay += matrixA[i][j] + " | " + matrixB[j];
-                } else
-                    matrixToDisplay += matrixA[i][j] + " ";
+        for (int y = 0; y < yHeight; y++) {
+            for (int x = 0; x < xLength; x++) {
+                if (x == 0 && y == 0)
+                    matrixToDisplay = matrixA[x][y] + " ";
+                else if (x == xLength - 1)
+                    matrixToDisplay += " | " + matrixA[x][y] + "\n";
+                else
+                    matrixToDisplay += matrixA[x][y] + " ";
             }
-            matrixToDisplay += "\n";
         }
 
         TextView matrixOutput = findViewById(R.id.matrix_output);
