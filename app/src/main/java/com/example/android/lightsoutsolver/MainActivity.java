@@ -20,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     int columns;
     int rows;
     int area;
-    int[][] matrixA;
-    int[][] matrixB = {{1}, {1}, {0}, {1}, {0}, {0}, {0}, {1}, {0}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Find the button that generates a lights out grid
+        // Find the button that generates A and its inverse (from B)
         final Button generateButton = findViewById(R.id.generate_button);
 
         // Set a click listener on that View
@@ -79,44 +77,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                matrixA = new int[area][area];
-                // matrixB = new int[area];
+                int[][] matrixA = generateMatrixA();
+                int[][] matrixB = {{1}, {1}, {0}, {1}, {0}, {0}, {0}, {1}, {0}};
 
-                for (int m = 0; m < area; m++) {
-                    for (int n = 0; n < area; n++) {
-                        if (m == n) {
-                            matrixA[m][n] = 1;
-
-                            if (n - 1 >= 0)
-                                matrixA[m][n - 1] = 1;
-                            if (n + 1 < area)
-                                matrixA[m][n + 1] = 1;
-                            if (n - columns >= 0)
-                                matrixA[m][n - columns] = 1;
-                            if (n + columns < area)
-                                matrixA[m][n + columns] = 1;
-                        } else if (matrixA[m][n] != 1)
-                            matrixA[m][n] = 0;
-                    }
-                }
-
-                String matrixToDisplay = null;
-
-                for (int i = 0; i < area; i++) {
-                    for (int j = 0; j < area; j++) {
-                        if (i == 0 && j == 0)
-                            matrixToDisplay = matrixA[i][j] + " ";
-                        else if (j == area - 1) {
-                            matrixToDisplay += matrixA[i][j] + " | " + matrixB[0][j];
-                        }
-                        else
-                            matrixToDisplay += matrixA[i][j] + " ";
-                    }
-                    matrixToDisplay += "\n";
-                }
-
-                TextView matrixOutput = findViewById(R.id.matrix_output);
-                matrixOutput.setText(matrixToDisplay);
+                displayMatrices(matrixA, matrixB);
 
                 calculateInverse(matrixA, matrixB, area);
             }
@@ -185,5 +149,47 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         else
             return 1;
+    }
+
+    public int[][] generateMatrixA() {
+        int[][] mMatrixA = null;
+
+        for (int i = 0; i < area; i++) {
+            for (int j = 0; j < area; j++) {
+                if (i == j) {
+                    mMatrixA[i][j] = 1;
+
+                    if (j - 1 >= 0)
+                        mMatrixA[i][j - 1] = 1;
+                    if (j + 1 < area)
+                        mMatrixA[i][j + 1] = 1;
+                    if (j - columns >= 0)
+                        mMatrixA[i][j - columns] = 1;
+                    if (j + columns < area)
+                        mMatrixA[i][j + columns] = 1;
+                } else if (mMatrixA[i][j] != 1)
+                    mMatrixA[i][j] = 0;
+            }
+        }
+        return mMatrixA;
+    }
+
+    public void displayMatrices(int[][] mMatrixA, int[][] mMatrixB) {
+        String matrixToDisplay = null;
+
+        for (int i = 0; i < area; i++) {
+            for (int j = 0; j < area; j++) {
+                if (i == 0 && j == 0)
+                    matrixToDisplay = mMatrixA[i][j] + " ";
+                else if (j == area - 1) {
+                    matrixToDisplay += mMatrixA[i][j] + " | " + mMatrixB[0][j];
+                } else
+                    matrixToDisplay += mMatrixA[i][j] + " ";
+            }
+            matrixToDisplay += "\n";
+        }
+
+        TextView matrixOutput = findViewById(R.id.matrix_output);
+        matrixOutput.setText(matrixToDisplay);
     }
 }
