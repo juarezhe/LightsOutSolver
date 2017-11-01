@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     static String TAG = "MainActivity.java";
@@ -17,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     int rows;
     int area;
     int[][] matrixA;
-    int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
+    int[][] matrixB = {{1}, {1}, {0}, {1}, {0}, {0}, {0}, {1}, {0}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 // Replace with Generate View
                 setInitialStateView.setVisibility(View.VISIBLE);
 
-                LinearLayout initialStateEntryFields = findViewById(R.id.initial_state_entry_fields);
+                /**
+                 LinearLayout initialStateEntryFields = findViewById(R.id.initial_state_entry_fields);
 
-                for (int i = 0; i < area; i++) {
-                    EditText myEditText = new EditText(initialStateEntryFields.getContext()); //Context
-                    // myEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    // myEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    initialStateEntryFields.addView(new EditText(initialStateEntryFields.getContext()));
-                }
+                 for (int i = 0; i < area; i++) {
+                 EditText myEditText = new EditText(initialStateEntryFields.getContext()); //Context
+                 // myEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                 // myEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                 initialStateEntryFields.addView(new EditText(initialStateEntryFields.getContext()));
+                 }
+                 **/
             }
         });
 
@@ -72,11 +78,6 @@ public class MainActivity extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Should calculate inverse
-
-                Log.v(TAG, "Columns: " + columns);
-                Log.v(TAG, "Rows: " + rows);
-                Log.v(TAG, "Area: " + area);
 
                 matrixA = new int[area][area];
                 // matrixB = new int[area];
@@ -106,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
                         if (i == 0 && j == 0)
                             matrixToDisplay = matrixA[i][j] + " ";
                         else if (j == area - 1) {
-                            matrixToDisplay += matrixA[i][j];
+                            matrixToDisplay += matrixA[i][j] + " | " + matrixB[0][j];
                         }
                         else
                             matrixToDisplay += matrixA[i][j] + " ";
                     }
-                    matrixToDisplay += " | " + matrixB[i] + "\n";
+                    matrixToDisplay += "\n";
                 }
 
                 TextView matrixOutput = findViewById(R.id.matrix_output);
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void calculateInverse(int[][] matrixA, int[] matrixB, int size) {
+    public void calculateInverse(int[][] mMatrixA, int[][] mMatrixB, int size) {
         // Consider first dimension of matrixA[][] and matrixB[] to be rows
         // such that matrixB is a single vertical column
 
@@ -161,16 +162,22 @@ public class MainActivity extends AppCompatActivity {
         // For each row with a 1 in its first column, "add" the topmost row to the others,
         // then swap to get the row and column to be a 1
 
-        int[][] tempA;
-        int[][] tempB;
+        int[][] tempA = null;
+        int[][] tempB = null;
 
         for (int i = 0; i < 1; i++) {
             for (int j = 0; j < size; j++) {
-                if (matrixA[i][j] == 1)
-                    Log.v(TAG, String.valueOf(i) + String.valueOf(j));
+                if (i == j) { // At i == j, the value should be 1, all other values should be 0
+                    for (int n = 0; n < size; n++)
+                        tempA[n][j] = mMatrixA[n][j];
+                } else if (mMatrixA[i][j] == 1) {
+                    for (int n = 0; n < size; n++)
+                        tempB[n][j] = binaryAdd(tempA[n][j], mMatrixA[n][j]);
+                    for (int n = 0; n < size; n++)
+                        mMatrixA[n][j] = tempB[n][j];
+                }
             }
         }
-
     }
 
     public int binaryAdd(int valueA, int valueB) {
