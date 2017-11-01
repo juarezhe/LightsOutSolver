@@ -2,17 +2,10 @@ package com.example.android.lightsoutsolver;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
     int columns;
     int rows;
     int area;
+    int[][] matrixA;
+    int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
                 // Replace with Generate View
                 setInitialStateView.setVisibility(View.VISIBLE);
 
+                matrixA = generateMatrixA();
+
+                displayMatrices();
+
                 /**
                  LinearLayout initialStateEntryFields = findViewById(R.id.initial_state_entry_fields);
 
@@ -70,19 +69,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Find the button that generates A and its inverse (from B)
-        final Button generateButton = findViewById(R.id.generate_button);
+        final Button calculateInverse = findViewById(R.id.calculate_inverse_button);
 
         // Set a click listener on that View
-        generateButton.setOnClickListener(new View.OnClickListener() {
+        calculateInverse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int[][] matrixA = generateMatrixA();
-                int[][] matrixB = {{1}, {1}, {0}, {1}, {0}, {0}, {0}, {1}, {0}};
+                calculateInverse();
 
-                displayMatrices(matrixA, matrixB);
-
-                calculateInverse(matrixA, matrixB, area);
             }
         });
 
@@ -118,41 +113,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void calculateInverse(int[][] mMatrixA, int[][] mMatrixB, int size) {
-        // Consider first dimension of matrixA[][] and matrixB[] to be rows
-        // such that matrixB is a single vertical column
-
-        // Check the first column of matrixA (matrixA[i][0]) for values of 1
-        // For each row with a 1 in its first column, "add" the topmost row to the others,
-        // then swap to get the row and column to be a 1
-
-        int[][] tempA = null;
-        int[][] tempB = null;
-
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < size; j++) {
-                if (i == j) { // At i == j, the value should be 1, all other values should be 0
-                    for (int n = 0; n < size; n++)
-                        tempA[n][j] = mMatrixA[n][j];
-                } else if (mMatrixA[i][j] == 1) {
-                    for (int n = 0; n < size; n++)
-                        tempB[n][j] = binaryAdd(tempA[n][j], mMatrixA[n][j]);
-                    for (int n = 0; n < size; n++)
-                        mMatrixA[n][j] = tempB[n][j];
-                }
-            }
-        }
-    }
-
-    public int binaryAdd(int valueA, int valueB) {
-        if ((valueA == 1 && valueB == 1) || (valueA == 0 && valueB == 0))
-            return 0;
-        else
-            return 1;
-    }
-
     public int[][] generateMatrixA() {
-        int[][] mMatrixA = null;
+        int[][] mMatrixA = new int[area][area];
 
         for (int i = 0; i < area; i++) {
             for (int j = 0; j < area; j++) {
@@ -174,17 +136,69 @@ public class MainActivity extends AppCompatActivity {
         return mMatrixA;
     }
 
-    public void displayMatrices(int[][] mMatrixA, int[][] mMatrixB) {
-        String matrixToDisplay = null;
+    public void calculateInverse() {
+        // Consider first dimension of matrixA[][] and matrixB[] to be rows
+        // such that matrixB is a single vertical column
+
+        // Check the first column of matrixA (matrixA[i][0]) for values of 1
+        // For each row with a 1 in its first column, "add" the topmost row to the others,
+        // then swap to get the row and column to be a 1
+
+        int[] tempA = new int[area];
+        int tempB = 0;
 
         for (int i = 0; i < area; i++) {
             for (int j = 0; j < area; j++) {
-                if (i == 0 && j == 0)
-                    matrixToDisplay = mMatrixA[i][j] + " ";
-                else if (j == area - 1) {
-                    matrixToDisplay += mMatrixA[i][j] + " | " + mMatrixB[0][j];
+                if (i == j && matrixA[i][j] == 1) { // At i == j, the value should be 1, all other values should be 0
+                    for (int n = 0; n < area; n++)
+                        tempA[n] = matrixA[n][j];
+                    tempB = matrixB[j];
+                } else if (i == j && matrixA[i][j] == 0) {
+                    for (int n = 0; n < area; n++) {
+                        tempA[n] = matrixA[n][j];
+                        matrixA[n][j] = matrixA[n][j + 1];
+                        matrixA[n][j + 1] = tempA[n];
+                        tempA[n] = matrixA[n][j];
+                    }
+                    tempB = matrixB[j];
+                    matrixB[j] = matrixB[j + 1];
+                    matrixB[j + 1] = tempB;
+                    tempB = matrixB[j];
+                } else if (i - 1 >= 0) {
+                    if (matrixA[i][j] == 1 && matrixA[i - 1][j] != 1) {
+                        for (int n = 0; n < area; n++)
+                            matrixA[n][j] = binaryAdd(tempA[n], matrixA[n][j]);
+                        matrixB[j] = binaryAdd(tempB, matrixB[j]);
+                    }
+                } else if (matrixA[i][j] == 1) {
+                    for (int n = 0; n < area; n++)
+                        matrixA[n][j] = binaryAdd(tempA[n], matrixA[n][j]);
+                    matrixB[j] = binaryAdd(tempB, matrixB[j]);
+                }
+            }
+        }
+
+        displayMatrices();
+    }
+
+    public int binaryAdd(int valueA, int valueB) {
+        if ((valueA == 1 && valueB == 1) || (valueA == 0 && valueB == 0))
+            return 0;
+        else
+            return 1;
+    }
+
+    public void displayMatrices() {
+        String matrixToDisplay = null;
+
+        for (int j = 0; j < area; j++) {
+            for (int i = 0; i < area; i++) {
+                if (j == 0 && i == 0)
+                    matrixToDisplay = matrixA[i][j] + " ";
+                else if (i == area - 1) {
+                    matrixToDisplay += matrixA[i][j] + " | " + matrixB[j];
                 } else
-                    matrixToDisplay += mMatrixA[i][j] + " ";
+                    matrixToDisplay += matrixA[i][j] + " ";
             }
             matrixToDisplay += "\n";
         }
