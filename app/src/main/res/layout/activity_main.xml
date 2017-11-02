@@ -3,25 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context="com.example.android.lightsoutsolver.MainActivity">
 
     <LinearLayout
-        android:id="@+id/submit_dimensions_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/set_dimensions_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/columns" />
+                android:text="@string/columns_and_rows" />
 
             <EditText
                 android:id="@+id/number_of_columns"
@@ -29,71 +33,53 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rows" />
-
-            <EditText
-                android:id="@+id/number_of_rows"
-                android:layout_width="32dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:textAlignment="center" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/submit_dimensions_button"
+        <GridLayout
+            android:id="@+id/grid_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/submit_dimensions_button" />
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+        </GridLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/set_initial_state_view"
+        android:id="@+id/button_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_weight="0"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/initial_state_entry_fields"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/set_dimensions_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"></LinearLayout>
+            android:text="@string/set_dimensions_button" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/set_state_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal">
+            android:text="@string/set_state_button"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/calculate_inverse_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Calculate" />
+        <Button
+            android:id="@+id/calculate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calculate_button"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/reset_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reset_button" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_button"
+            android:visibility="gone" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/matrix_output"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        tools:text="0101011101100" />
 
 </LinearLayout>
