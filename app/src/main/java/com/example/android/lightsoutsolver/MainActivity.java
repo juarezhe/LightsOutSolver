@@ -112,23 +112,29 @@ public class MainActivity extends AppCompatActivity {
     public int[][] generateMatrixA() {
         int[][] mMatrixA = new int[xLength][yHeight];
 
-        for (int x = 0; x < xLength; x++) {
-            for (int y = 0; y < yHeight; y++) {
-                if (x == y) {
-                    mMatrixA[x][y] = 1;
+        for (int n = 0; n < rows; n++) {
+            for (int y = n * rows; y < rows + (n * rows); y++) {
+                for (int x = n * columns; x < columns + (n * columns); x++) {
+                    if (x == y) {
+                        mMatrixA[x][y] = 1;
 
-                    if (y - 1 >= 0)
-                        mMatrixA[x][y - 1] = 1;
-                    if (y + 1 < yHeight)
-                        mMatrixA[x][y + 1] = 1;
-                    if (y - columns >= 0)
-                        mMatrixA[x][y - columns] = 1;
-                    if (y + columns < yHeight)
-                        mMatrixA[x][y + columns] = 1;
-                } else if (mMatrixA[x][y] != 1)
-                    mMatrixA[x][y] = 0;
+                        if (x + 1 < columns + (n * columns))
+                            mMatrixA[x + 1][y] = 1;
+
+                        if (x - 1 >= n * columns)
+                            mMatrixA[x - 1][y] = 1;
+
+                        if (x + columns < columns * columns)
+                            mMatrixA[x + columns][y] = 1;
+
+                        if (x - columns >= 0)
+                            mMatrixA[x - columns][y] = 1;
+                    } else if (mMatrixA[x][y] != 1)
+                        mMatrixA[x][y] = 0;
+                }
             }
         }
+
         return mMatrixA;
     }
 
@@ -160,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //displayMatrices();
-        inversionSecondPass();
+        displayMatrices();
+        //inversionSecondPass();
     }
 
     public void inversionSecondPass() {
