@@ -12,9 +12,9 @@ public class MainActivity extends AppCompatActivity {
     static String TAG = "MainActivity.java";
     int columns;
     int rows;
-    int xLength;
-    int yHeight;
+    int arrayLength;
     int[][] matrixA;
+    int[] matrixB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText numberOfRows = findViewById(R.id.number_of_rows);
                 rows = Integer.parseInt(numberOfRows.getText().toString());
 
-                xLength = columns * rows + 1;
-                yHeight = columns * rows;
+                arrayLength = columns * rows;
 
                 // Find the Set Initial State View
                 View setInitialStateView = findViewById(R.id.set_initial_state_view);
@@ -54,11 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
                 matrixA = generateMatrixA();
 
-                int[] matrixB = {1, 1, 0, 1, 0, 0, 0, 1, 0};
-
-                for (int n = 0; n < yHeight; n++) {
-                    matrixA[xLength - 1][n] = matrixB[n];
-                }
+                matrixB = new int[]{1, 1, 0, 1, 0, 0, 0, 1, 0};
 
                 displayMatrices();
             }
@@ -110,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int[][] generateMatrixA() {
-        int[][] mMatrixA = new int[xLength][yHeight];
+        int[][] mMatrixA = new int[arrayLength][arrayLength];
 
         for (int n = 0; n < rows; n++) {
             for (int y = n * rows; y < rows + (n * rows); y++) {
@@ -139,50 +134,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void inversionFirstPass() {
-        int[] tempA = new int[xLength];
+        int[] tempA = new int[arrayLength];
         int tempB = 0;
 
-        for (int x = 0; x < xLength; x++) {
-            for (int y = x; y < yHeight; y++) {
+        for (int x = 0; x < arrayLength; x++) {
+            for (int y = x; y < arrayLength; y++) {
                 if (x == y) {
                     if (matrixA[x][y] == 0) {
-                        for (int j = y; j < yHeight; j++) {
+                        for (int j = y; j < arrayLength; j++) {
                             if (matrixA[x][j] == 1) {
-                                for (int n = 0; n < xLength; n++) {
+                                for (int n = 0; n < arrayLength; n++) {
                                     tempA[n] = matrixA[n][j];
                                     matrixA[n][j] = matrixA[n][y];
                                     matrixA[n][y] = tempA[n];
                                 }
+                                tempB = matrixB[j];
+                                matrixB[j] = matrixB[y];
+                                matrixB[y] = tempB;
                             }
                         }
                     } else if (matrixA[x][y] == 1) {
-                        for (int n = 0; n < xLength; n++)
+                        for (int n = 0; n < arrayLength; n++)
                             tempA[n] = matrixA[n][y];
+                        tempB = matrixB[y];
                     }
                 } else if (matrixA[x][y] == 1) {
-                    for (int n = 0; n < xLength; n++)
+                    for (int n = 0; n < arrayLength; n++)
                         matrixA[n][y] = binaryAdd(tempA[n], matrixA[n][y]);
+                    matrixB[y] = binaryAdd(tempB, matrixB[y]);
                 }
             }
         }
 
-        //displayMatrices();
         inversionSecondPass();
     }
 
     public void inversionSecondPass() {
 
-        int[] tempA = new int[xLength];
+        int[] tempA = new int[arrayLength];
         int tempB = 0;
 
-        for (int x = xLength - 2; x > 0; x--) {
+        for (int x = arrayLength - 1; x >= 0; x--) {
             for (int y = x; y >= 0; y--) {
                 if (x == y) {
-                    for (int n = 0; n < xLength; n++)
+                    for (int n = 0; n < arrayLength; n++)
                         tempA[n] = matrixA[n][y];
+                    tempB = matrixB[y];
                 } else if (matrixA[x][y] == 1) {
-                    for (int n = 0; n < xLength; n++)
+                    for (int n = 0; n < arrayLength; n++)
                         matrixA[n][y] = binaryAdd(tempA[n], matrixA[n][y]);
+                    matrixB[y] = binaryAdd(tempB, matrixB[y]);
                 }
             }
         }
@@ -200,12 +201,12 @@ public class MainActivity extends AppCompatActivity {
     public void displayMatrices() {
         String matrixToDisplay = null;
 
-        for (int y = 0; y < yHeight; y++) {
-            for (int x = 0; x < xLength; x++) {
+        for (int y = 0; y < arrayLength; y++) {
+            for (int x = 0; x < arrayLength; x++) {
                 if (x == 0 && y == 0)
                     matrixToDisplay = matrixA[x][y] + " ";
-                else if (x == xLength - 1)
-                    matrixToDisplay += " | " + matrixA[x][y] + "\n";
+                else if (x == arrayLength - 1)
+                    matrixToDisplay += matrixA[x][y] + " | " + matrixB[y] + "\n";
                 else
                     matrixToDisplay += matrixA[x][y] + " ";
             }
