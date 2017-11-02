@@ -166,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        displayMatrices();
-        //inversionSecondPass();
+        //displayMatrices();
+        inversionSecondPass();
     }
 
     public void inversionSecondPass() {
