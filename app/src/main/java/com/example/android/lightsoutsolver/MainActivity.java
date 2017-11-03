@@ -1,16 +1,21 @@
 package com.example.android.lightsoutsolver;
 
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewParent;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     int arrayLength;
     int[][] matrixA;
     int[] matrixB;
-    TextView[] textViewArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,28 +48,51 @@ public class MainActivity extends AppCompatActivity {
                 changeToSetStateButtonBar();
 
                 matrixA = generateMatrixA();
-                matrixB = new int[]{1, 1, 0, 1, 0, 0, 0, 1, 0};
-
-                textViewArray = new TextView[arrayLength];
+                matrixB = new int[arrayLength];
 
                 GridLayout gridView = findViewById(R.id.grid_view);
                 gridView.setColumnCount(columns);
                 gridView.setRowCount(rows);
 
+                //View listItemView = convertView;
+                //if (listItemView == null) {
+                //    listItemView = LayoutInflater.from(getContext()).inflate(
+                //R.layout.list_item, parent, false);
+                //}
+
                 for (int n = 0; n < arrayLength; n++) {
-                    textViewArray[n] = new TextView(getApplicationContext());
-                    textViewArray[n].setText(String.valueOf(matrixB[n]));
-                    textViewArray[n].setWidth(128);
-                    textViewArray[n].setHeight(128);
-                    textViewArray[n].setGravity(Gravity.CENTER);
-                    if (matrixB[n] == 1)
-                        textViewArray[n].setBackgroundColor(Color.YELLOW);
-                    else
-                        textViewArray[n].setBackgroundColor(Color.GRAY);
-                    gridView.addView(textViewArray[n]);
+                    TextView toBeAdded = new TextView(getApplicationContext());
+                    toBeAdded.setText("0");
+                    toBeAdded.setBackgroundColor(Color.GRAY);
+                    toBeAdded.setWidth(128);
+                    toBeAdded.setHeight(128);
+                    toBeAdded.setGravity(Gravity.CENTER);
+                    toBeAdded.setTag(n);
+                    toBeAdded.setOnClickListener(this);
+                    gridView.addView(toBeAdded);
                 }
                 // Create onClick listener for each square
 
+            }
+        });
+
+        final GridLayout gridView = findViewById(R.id.grid_view);
+        gridView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = (Integer) view.getTag();
+                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
+                /**
+                 TextView tempView = (TextView) gridView.getChildAt(position);
+
+                 if (Integer.parseInt(String.valueOf(tempView.getText())) == 0) {
+                 tempView.setText("1");
+                 tempView.setBackgroundColor(Color.YELLOW);
+                 } else {
+                 tempView.setText("0");
+                 tempView.setBackgroundColor(Color.GRAY);
+                 }
+                 **/
             }
         });
 
@@ -76,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 for (int n = 0; n < arrayLength; n++) {
-                    matrixB[n] = Integer.parseInt(textViewArray[n].getText().toString());
+                    //matrixB[n] = Integer.parseInt(textViewArray[n].getText().toString());
                 }
                 changeToCalculateButtonBar();
 
@@ -91,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
                 inversionFirstPass();
 
-                // Cycle through each Grid View child assigning and coloring solution
+                // Cycle through each Grid View child assigning the solution via color and value
                 GridLayout gridView = findViewById(R.id.grid_view);
 
                 for (int n = 0; n < arrayLength; n++) {
@@ -249,9 +276,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void reset() {
-        // Find Set State View and make it GONE
-        View setStateView = findViewById(R.id.grid_view);
-        setStateView.setVisibility(View.GONE);
+        // Find Grid View. Make it GONE and remove all children Views
+        GridLayout gridView = findViewById(R.id.grid_view);
+        gridView.setVisibility(View.GONE);
+        gridView.removeAllViews();
 
         // Find Set State Button and make it GONE
         Button setStateButton = findViewById(R.id.set_state_button);
@@ -272,9 +300,5 @@ public class MainActivity extends AppCompatActivity {
         // Find Set Dimensions Button and make it VISIBLE
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
         setDimensionsButton.setVisibility(View.VISIBLE);
-
-        //Find the Grid View and remove all children Views
-        GridLayout gridView = findViewById(R.id.grid_view);
-        gridView.removeAllViews();
     }
 }
