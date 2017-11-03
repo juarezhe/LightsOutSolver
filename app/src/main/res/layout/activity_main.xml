@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <GridLayout
-            android:id="@+id/grid_view"
+            android:id="@+id/grid_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -47,6 +47,7 @@
 
     <LinearLayout
         android:id="@+id/button_bar"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -55,26 +56,22 @@
 
         <Button
             android:id="@+id/set_dimensions_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/set_dimensions_button" />
 
         <Button
-            android:id="@+id/set_state_button"
+            android:id="@+id/solve_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_state_button"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/calculate_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calculate_button"
+            android:text="@string/solve_button"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/reset_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reset_button"

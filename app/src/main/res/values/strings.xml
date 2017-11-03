@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Lights Out Solver</string>
-    <string name="calculate_button">Calculate</string>
+    <string name="solve_button">Solve</string>
     <string name="reset_button">Reset</string>
     <string name="set_dimensions_button">Set Dimensions</string>
     <string name="columns_and_rows">Columns/Rows:</string>
-    <string name="set_state_button">Set State</string>
 </resources>

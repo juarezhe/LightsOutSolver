@@ -1,21 +1,14 @@
 package com.example.android.lightsoutsolver;
 
 import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewParent;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +27,6 @@ public class MainActivity extends AppCompatActivity {
         // Find Set Dimensions Button and set an OnClickListener
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
         setDimensionsButton.setOnClickListener(new View.OnClickListener() {
-
-            // The code in this method will be executed when the Generate Button is clicked
             @Override
             public void onClick(View view) {
 
@@ -43,93 +34,32 @@ public class MainActivity extends AppCompatActivity {
                 rows = columns = Integer.parseInt(numberOfColumns.getText().toString());
 
                 arrayLength = columns * rows;
-
-                changeToGridView();
-                changeToSetStateButtonBar();
-
-                matrixA = generateMatrixA();
                 matrixB = new int[arrayLength];
 
-                GridLayout gridView = findViewById(R.id.grid_view);
-                gridView.setColumnCount(columns);
-                gridView.setRowCount(rows);
-
-                //View listItemView = convertView;
-                //if (listItemView == null) {
-                //    listItemView = LayoutInflater.from(getContext()).inflate(
-                //R.layout.list_item, parent, false);
-                //}
-
-                for (int n = 0; n < arrayLength; n++) {
-                    TextView toBeAdded = new TextView(getApplicationContext());
-                    toBeAdded.setText("0");
-                    toBeAdded.setBackgroundColor(Color.GRAY);
-                    toBeAdded.setWidth(128);
-                    toBeAdded.setHeight(128);
-                    toBeAdded.setGravity(Gravity.CENTER);
-                    toBeAdded.setTag(n);
-                    toBeAdded.setOnClickListener(this);
-                    gridView.addView(toBeAdded);
-                }
-                // Create onClick listener for each square
-
-            }
-        });
-
-        final GridLayout gridView = findViewById(R.id.grid_view);
-        gridView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = (Integer) view.getTag();
-                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
-                /**
-                 TextView tempView = (TextView) gridView.getChildAt(position);
-
-                 if (Integer.parseInt(String.valueOf(tempView.getText())) == 0) {
-                 tempView.setText("1");
-                 tempView.setBackgroundColor(Color.YELLOW);
-                 } else {
-                 tempView.setText("0");
-                 tempView.setBackgroundColor(Color.GRAY);
-                 }
-                 **/
-            }
-        });
-
-        // Find Set State Button and assign an OnClickListener
-        Button setStateButton = findViewById(R.id.set_state_button);
-        setStateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                for (int n = 0; n < arrayLength; n++) {
-                    //matrixB[n] = Integer.parseInt(textViewArray[n].getText().toString());
-                }
+                matrixA = generateMatrixA();
+                generateGrid();
+                changeToGridLayout();
                 changeToCalculateButtonBar();
-
             }
         });
 
         // Find Calculate Button and assign an OnClickListener
-        Button calculateButton = findViewById(R.id.calculate_button);
+        Button calculateButton = findViewById(R.id.solve_button);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                GridLayout gridLayout = findViewById(R.id.grid_layout);
                 inversionFirstPass();
-
-                // Cycle through each Grid View child assigning the solution via color and value
-                GridLayout gridView = findViewById(R.id.grid_view);
+                inversionSecondPass();
 
                 for (int n = 0; n < arrayLength; n++) {
-                    TextView tempView = (TextView) gridView.getChildAt(n);
-                    tempView.setText(String.valueOf(matrixB[n]));
+                    TextView cell = (TextView) gridLayout.getChildAt(n);
                     if (matrixB[n] == 1)
-                        tempView.setBackgroundColor(Color.BLUE);
+                        cell.setBackgroundColor(Color.BLUE);
                     else
-                        tempView.setBackgroundColor(Color.GRAY);
+                        cell.setBackgroundColor(Color.GRAY);
                 }
-
             }
         });
 
@@ -138,14 +68,12 @@ public class MainActivity extends AppCompatActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 reset();
-
             }
         });
     }
 
-    public int[][] generateMatrixA() {
+    private int[][] generateMatrixA() {
         int[][] mMatrixA = new int[arrayLength][arrayLength];
 
         for (int n = 0; n < rows; n++) {
@@ -170,11 +98,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         return mMatrixA;
     }
 
-    public void inversionFirstPass() {
+    private void generateGrid() {
+        GridLayout gridLayout = findViewById(R.id.grid_layout);
+        gridLayout.setColumnCount(columns);
+        gridLayout.setRowCount(rows);
+
+        for (int n = 0; n < arrayLength; n++) {
+            TextView cell = new TextView(getApplicationContext());
+            matrixB[n] = 0;
+            cell.setBackgroundColor(Color.GRAY);
+            cell.setWidth(128);
+            cell.setHeight(128);
+            cell.setId(n);
+            cell.setGravity(Gravity.CENTER);
+            gridLayout.addView(cell);
+        }
+
+        for (int n = 0; n < arrayLength; n++) {
+            TextView container = (TextView) gridLayout.getChildAt(n);
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int n = view.getId();
+                    if (matrixB[n] == 1) {
+                        matrixB[n] = 0;
+                        view.setBackgroundColor(Color.GRAY);
+                    } else {
+                        matrixB[n] = 1;
+                        view.setBackgroundColor(Color.YELLOW);
+                    }
+                }
+            });
+        }
+    }
+
+    private void inversionFirstPass() {
         int[] tempA = new int[arrayLength];
         int tempB = 0;
 
@@ -206,11 +167,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        inversionSecondPass();
     }
 
-    public void inversionSecondPass() {
+    private void inversionSecondPass() {
 
         int[] tempA = new int[arrayLength];
         int tempB = 0;
@@ -230,63 +189,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int binaryAdd(int valueA, int valueB) {
+    private int binaryAdd(int valueA, int valueB) {
         if ((valueA == 1 && valueB == 1) || (valueA == 0 && valueB == 0))
             return 0;
         else
             return 1;
     }
 
-    public void changeToGridView() {
-        // Find Set Dimensions View
+    private void changeToGridLayout() {
+        // Find Set Dimensions View and make it GONE
         View setDimensionsView = findViewById(R.id.set_dimensions_view);
-
-        // Find the Set State View
-        View setStateView = findViewById(R.id.grid_view);
-
-        // Remove Set Dimensions View
         setDimensionsView.setVisibility(View.GONE);
 
-        // Add Set State View
-        setStateView.setVisibility(View.VISIBLE);
+        // Find Grid Layout and make it VISIBLE
+        View gridLayout = findViewById(R.id.grid_layout);
+        gridLayout.setVisibility(View.VISIBLE);
     }
 
-    public void changeToSetStateButtonBar() {
+    private void changeToCalculateButtonBar() {
         // Find Set Dimensions Button and make it GONE
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
         setDimensionsButton.setVisibility(View.GONE);
 
-        // Find Set State Button and make it VISIBLE
-        Button setStateButton = findViewById(R.id.set_state_button);
-        setStateButton.setVisibility(View.VISIBLE);
+        // Find Calculate Button and make it VISIBLE
+        Button calculateButton = findViewById(R.id.solve_button);
+        calculateButton.setVisibility(View.VISIBLE);
 
         // Find Reset Button and make it VISIBLE
         Button resetButton = findViewById(R.id.reset_button);
         resetButton.setVisibility(View.VISIBLE);
     }
 
-    public void changeToCalculateButtonBar() {
-        // Find Set State Button and make it GONE
-        Button setStateButton = findViewById(R.id.set_state_button);
-        setStateButton.setVisibility(View.GONE);
-
-        // Find Calculate Button and make it VISIBLE
-        Button calculateButton = findViewById(R.id.calculate_button);
-        calculateButton.setVisibility(View.VISIBLE);
-    }
-
-    public void reset() {
-        // Find Grid View. Make it GONE and remove all children Views
-        GridLayout gridView = findViewById(R.id.grid_view);
-        gridView.setVisibility(View.GONE);
-        gridView.removeAllViews();
-
-        // Find Set State Button and make it GONE
-        Button setStateButton = findViewById(R.id.set_state_button);
-        setStateButton.setVisibility(View.GONE);
+    private void reset() {
+        // Find Grid Layout and make it GONE; remove all children Views
+        GridLayout gridLayout = findViewById(R.id.grid_layout);
+        gridLayout.setVisibility(View.GONE);
+        gridLayout.removeAllViews();
 
         // Find Calculate Button and make it GONE
-        Button calculateButton = findViewById(R.id.calculate_button);
+        Button calculateButton = findViewById(R.id.solve_button);
         calculateButton.setVisibility(View.GONE);
 
         // Find the Reset Button and make it GONE
