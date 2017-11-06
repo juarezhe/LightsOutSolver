@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     if (matrixB[n] == 1)
                         cell.setBackgroundColor(Color.BLUE);
                     else
-                        cell.setBackgroundColor(Color.GRAY);
+                        cell.setBackgroundColor(Color.BLACK);
                 }
             }
         });
@@ -105,15 +107,21 @@ public class MainActivity extends AppCompatActivity {
         GridLayout gridLayout = findViewById(R.id.grid_layout);
         gridLayout.setColumnCount(columns);
         gridLayout.setRowCount(rows);
+        int margin = 2;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(margin, margin, margin, margin);
 
         for (int n = 0; n < arrayLength; n++) {
             TextView cell = new TextView(getApplicationContext());
             matrixB[n] = 0;
-            cell.setBackgroundColor(Color.GRAY);
+            cell.setBackgroundColor(Color.BLACK);
+            cell.setLayoutParams(params);
             cell.setWidth(128);
             cell.setHeight(128);
             cell.setId(n);
             cell.setGravity(Gravity.CENTER);
+            cell.requestLayout();
             gridLayout.addView(cell);
         }
 
@@ -125,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     int n = view.getId();
                     if (matrixB[n] == 1) {
                         matrixB[n] = 0;
-                        view.setBackgroundColor(Color.GRAY);
+                        view.setBackgroundColor(Color.BLACK);
                     } else {
                         matrixB[n] = 1;
                         view.setBackgroundColor(Color.YELLOW);
