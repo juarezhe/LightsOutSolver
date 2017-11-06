@@ -1,11 +1,14 @@
 package com.example.android.lightsoutsolver;
 
 import android.graphics.Color;
+import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -21,10 +24,14 @@ public class MainActivity extends AppCompatActivity {
     int[][] matrixA;
     int[] matrixB;
 
+    Point size = new Point();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindowManager().getDefaultDisplay().getSize(size);
 
         // Find Set Dimensions Button and set an OnClickListener
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
@@ -108,17 +115,24 @@ public class MainActivity extends AppCompatActivity {
         gridLayout.setColumnCount(columns);
         gridLayout.setRowCount(rows);
         int margin = 2;
+        int gridSmallestDimension;
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(margin, margin, margin, margin);
+        LinearLayout gridContainer = findViewById(R.id.grid_container);
+        if (gridContainer.getMeasuredWidth() < gridContainer.getMeasuredHeight())
+            gridSmallestDimension = gridContainer.getMeasuredWidth();
+        else
+            gridSmallestDimension = gridContainer.getMeasuredHeight();
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(margin, margin, margin, margin);
 
         for (int n = 0; n < arrayLength; n++) {
             TextView cell = new TextView(getApplicationContext());
             matrixB[n] = 0;
             cell.setBackgroundColor(Color.BLACK);
-            cell.setLayoutParams(params);
-            cell.setWidth(128);
-            cell.setHeight(128);
+            cell.setLayoutParams(layoutParams);
+            cell.setWidth((gridSmallestDimension - (columns * margin * 2)) / columns);
+            cell.setHeight((gridSmallestDimension - (rows * margin * 2)) / rows);
             cell.setId(n);
             cell.setGravity(Gravity.CENTER);
             cell.requestLayout();
