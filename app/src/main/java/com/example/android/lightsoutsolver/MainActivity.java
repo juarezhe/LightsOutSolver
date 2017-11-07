@@ -2,13 +2,11 @@ package com.example.android.lightsoutsolver;
 
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -17,7 +15,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    static String TAG = "MainActivity.java";
+    // static String TAG = "MainActivity.java";
     int columns;
     int rows;
     int arrayLength;
