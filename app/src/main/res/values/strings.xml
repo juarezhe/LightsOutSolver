@@ -3,5 +3,6 @@
     <string name="solve_button">Solve</string>
     <string name="reset_button">Reset</string>
     <string name="set_dimensions_button">Set Dimensions</string>
-    <string name="columns_and_rows">Columns/Rows:</string>
+    <string name="columns">Columns:</string>
+    <string name="rows">Rows:</string>
 </resources>

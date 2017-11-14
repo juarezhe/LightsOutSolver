@@ -38,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 EditText numberOfColumns = findViewById(R.id.number_of_columns);
-                rows = columns = Integer.parseInt(numberOfColumns.getText().toString());
+                columns = Integer.parseInt(numberOfColumns.getText().toString());
+
+                EditText numberOfRows = findViewById(R.id.number_of_rows);
+                rows = Integer.parseInt(numberOfRows.getText().toString());
 
                 arrayLength = columns * rows;
                 matrixB = new int[arrayLength];
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         if (x - 1 >= n * columns)
                             mMatrixA[x - 1][y] = 1;
 
-                        if (x + columns < columns * columns)
+                        if (x + columns < columns * rows)
                             mMatrixA[x + columns][y] = 1;
 
                         if (x - columns >= 0)
@@ -117,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout gridContainer = findViewById(R.id.grid_container);
         if (gridContainer.getMeasuredWidth() < gridContainer.getMeasuredHeight())
-            gridSmallestDimension = gridContainer.getMeasuredWidth();
+            gridSmallestDimension = (gridContainer.getMeasuredWidth() - (columns * margin * 2)) / columns;
         else
-            gridSmallestDimension = gridContainer.getMeasuredHeight();
+            gridSmallestDimension = (gridContainer.getMeasuredHeight() - (columns * margin * 2)) / columns;
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(margin, margin, margin, margin);
@@ -129,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
             matrixB[n] = 0;
             cell.setBackgroundColor(Color.BLACK);
             cell.setLayoutParams(layoutParams);
-            cell.setWidth((gridSmallestDimension - (columns * margin * 2)) / columns);
-            cell.setHeight((gridSmallestDimension - (rows * margin * 2)) / rows);
+            cell.setWidth(gridSmallestDimension);
+            cell.setHeight(gridSmallestDimension);
             cell.setId(n);
             cell.setGravity(Gravity.CENTER);
             cell.requestLayout();

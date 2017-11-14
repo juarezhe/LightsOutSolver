@@ -26,10 +26,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/columns_and_rows" />
+                android:text="@string/columns" />
 
             <EditText
                 android:id="@+id/number_of_columns"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rows" />
+
+            <EditText
+                android:id="@+id/number_of_rows"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
