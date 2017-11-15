@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +16,17 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // static String TAG = "MainActivity.java";
+    static String TAG = "MainActivity.java";
     int columns;
     int rows;
     int arrayLength;
     int[][] matrixA;
     int[] matrixB;
 
-    Point size = new Point();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getWindowManager().getDefaultDisplay().getSize(size);
 
         // Find Set Dimensions Button and set an OnClickListener
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
@@ -59,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                GridLayout gridLayout = findViewById(R.id.grid_layout);
                 inversionFirstPass();
                 inversionSecondPass();
+
+                GridLayout gridLayout = findViewById(R.id.grid_layout);
 
                 for (int n = 0; n < arrayLength; n++) {
                     TextView cell = (TextView) gridLayout.getChildAt(n);
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         int[][] mMatrixA = new int[arrayLength][arrayLength];
 
         for (int n = 0; n < rows; n++) {
-            for (int y = n * rows; y < rows + (n * rows); y++) {
+            for (int y = n * columns; y < columns + (n * columns); y++) {
                 for (int x = n * columns; x < columns + (n * columns); x++) {
                     if (x == y) {
                         mMatrixA[x][y] = 1;
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         if (x - 1 >= n * columns)
                             mMatrixA[x - 1][y] = 1;
 
-                        if (x + columns < columns * rows)
+                        if (x + columns < arrayLength)
                             mMatrixA[x + columns][y] = 1;
 
                         if (x - columns >= 0)
@@ -112,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void generateGrid() {
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+
         GridLayout gridLayout = findViewById(R.id.grid_layout);
         gridLayout.setColumnCount(columns);
         gridLayout.setRowCount(rows);
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             for (int y = x; y < arrayLength; y++) {
                 if (x == y) {
                     if (matrixA[x][y] == 0) {
-                        for (int j = y; j < arrayLength; j++) {
+                        for (int j = y + 1; j < arrayLength; j++) {
                             if (matrixA[x][j] == 1) {
                                 for (int n = 0; n < arrayLength; n++) {
                                     tempA[n] = matrixA[n][j];
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                                 matrixB[y] = tempB;
                             }
                         }
-                    } else if (matrixA[x][y] == 1) {
+                    } else {
                         for (int n = 0; n < arrayLength; n++)
                             tempA[n] = matrixA[n][y];
                         tempB = matrixB[y];
@@ -188,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
                         matrixA[n][y] = binaryAdd(tempA[n], matrixA[n][y]);
                     matrixB[y] = binaryAdd(tempB, matrixB[y]);
                 }
+                //Log.v(TAG, "(x, y) = (" + x + ", " + y + ")");
+                //debugMatrix(matrixA);
             }
         }
     }
@@ -264,5 +267,21 @@ public class MainActivity extends AppCompatActivity {
         // Find Set Dimensions Button and make it VISIBLE
         Button setDimensionsButton = findViewById(R.id.set_dimensions_button);
         setDimensionsButton.setVisibility(View.VISIBLE);
+    }
+
+    private void debugMatrix(int mMatrix[][]) {
+
+        String messageToDisplay = null;
+
+        for (int y = 0; y < arrayLength; y++) {
+            for (int x = 0; x < arrayLength; x++) {
+                if (x == 0)
+                    messageToDisplay = String.valueOf(mMatrix[x][y]) + " ";
+                else
+                    messageToDisplay += String.valueOf(mMatrix[x][y]) + " ";
+
+            }
+            Log.v(TAG, messageToDisplay);
+        }
     }
 }
